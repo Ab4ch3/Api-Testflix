@@ -35,19 +35,23 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
+        $newMovie = new Movie();
+
         //Store the file in storage\app\public folder
         $file = $request->file('path');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('uploads', $fileName, 'public');
+        $file_Name = time() . '_' . $file->getClientOriginalName();
+        $file_Path = $file->storeAs('uploads', $file_Name, 'public');
 
 
         // Store file information in the database
-        $newMovie = new Movie();
         $newMovie->user_id = $request->user_id;
         $newMovie->title = $request->title;
-        $newMovie->path = $filePath;
-
+        $newMovie->path = '/storage/' . $file_Path;
         $newMovie->save();
+
+
+        // $newMovie->path = $file_Path;
+
 
         return response()->json(['success' => 'Movie Created successfully.']);
     }
